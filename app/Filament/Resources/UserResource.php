@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\UserRole;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -38,7 +40,7 @@ class UserResource extends Resource
                                     ->required()
                                     ->maxLength(255)
                                     ->placeholder('Enter full name'),
-                                
+
                                 TextInput::make('email')
                                     ->label('Email Address')
                                     ->email()
@@ -46,6 +48,13 @@ class UserResource extends Resource
                                     ->unique(ignoreRecord: true)
                                     ->maxLength(255)
                                     ->placeholder('Enter email address'),
+                                Select::make('role')
+                                    ->label('Role')
+                                    ->options([
+                                        UserRole::ADMIN->value => 'Administrator',
+                                        UserRole::USER->value => 'Regular User',
+                                    ])
+                                    ->required()
                             ]),
                     ]),
 
