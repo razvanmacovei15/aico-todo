@@ -10,6 +10,11 @@ class ListUsers extends ListRecords
 {
     protected static string $resource = UserResource::class;
 
+    public static function canAccess(array $parameters = []): bool
+    {
+        return auth()->user()->isAdmin();
+    }
+
     protected function getHeaderActions(): array
     {
         return [

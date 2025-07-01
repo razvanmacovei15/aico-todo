@@ -18,6 +18,12 @@ class TaskResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function canAccess(): bool
+    {
+        // Both admin and regular users can access tasks
+        return true;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -74,7 +80,14 @@ class TaskResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->modifyQueryUsing(function (Builder $query) {
+                // If user is not admin, only show their own tasks
+                if (!auth()->user()->isAdmin()) {
+                    $query->where('user_id', auth()->id());
+                }
+                return $query;
+            });
     }
 
     public static function getRelations(): array
