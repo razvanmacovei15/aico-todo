@@ -63,10 +63,10 @@ class TaskResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\TextColumn::make('title')->searchable(),
                 Tables\Columns\TextColumn::make('description'),
-                Tables\Columns\TextColumn::make('created_at'),
-                Tables\Columns\TextColumn::make('due_date'),
+                Tables\Columns\TextColumn::make('created_at')->sortable(),
+                Tables\Columns\TextColumn::make('due_date')->sortable(),
 
                 Tables\Columns\TextColumn::make('users')
                     ->label('Assigned Users')
@@ -97,7 +97,18 @@ class TaskResource extends Resource
                     ]),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'completed' => 'Completed',
+                        'cancelled' => 'Cancelled',
+                    ]),
+                Tables\Filters\SelectFilter::make('priority')
+                    ->options([
+                        'low' => 'LOW',
+                        'medium' => 'MEDIUM',
+                        'high' => 'HIGH',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
