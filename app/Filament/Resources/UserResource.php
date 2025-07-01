@@ -12,6 +12,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Grid;
 
 class UserResource extends Resource
 {
@@ -23,7 +28,47 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Section::make('Basic Information')
+                    ->description('User account details')
+                    ->schema([
+                        Grid::make(2)
+                            ->schema([
+                                TextInput::make('name')
+                                    ->label('Full Name')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->placeholder('Enter full name'),
+                                
+                                TextInput::make('email')
+                                    ->label('Email Address')
+                                    ->email()
+                                    ->required()
+                                    ->unique(ignoreRecord: true)
+                                    ->maxLength(255)
+                                    ->placeholder('Enter email address'),
+                            ]),
+                    ]),
+
+                Section::make('Security')
+                    ->description('Password and verification settings')
+                    ->schema([
+                        TextInput::make('password')
+                            ->label('Password')
+                            ->password()
+                            ->dehydrated(fn ($state): bool => filled($state))
+                            ->required(fn (string $context): bool => $context === 'create')
+                            ->minLength(8)
+                            ->confirmed()
+                            ->placeholder('Enter password'),
+
+                        TextInput::make('password_confirmation')
+                            ->label('Confirm Password')
+                            ->password()
+                            ->dehydrated(false)
+                            ->required(fn (string $context): bool => $context === 'create')
+                            ->minLength(8)
+                            ->placeholder('Confirm password'),
+                    ]),
             ]);
     }
 
