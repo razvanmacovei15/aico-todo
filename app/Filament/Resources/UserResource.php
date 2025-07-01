@@ -38,7 +38,7 @@ class UserResource extends Resource
                                     ->required()
                                     ->maxLength(255)
                                     ->placeholder('Enter full name'),
-                                
+
                                 TextInput::make('email')
                                     ->label('Email Address')
                                     ->email()
@@ -76,10 +76,9 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->sortable(),
+                Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('email'),
                 Tables\Columns\TextColumn::make('created_at'),
-                Tables\Columns\TextColumn::make('password'),
             ])
             ->filters([
                 //

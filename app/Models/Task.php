@@ -13,4 +13,9 @@ class Task extends Model
         'status',
         'priority'
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }
