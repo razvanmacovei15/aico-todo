@@ -69,6 +69,50 @@ class UserResource extends Resource
                             ->minLength(8)
                             ->placeholder('Confirm password'),
                     ]),
+
+            Section::make('User Tasks')
+                ->description('Tasks assigned to this user')
+                ->schema([
+                    Forms\Components\Placeholder::make('tasks_table')
+                        ->content(function ($record) {
+                            if (!$record || !$record->exists) {
+                                return 'Save the user first to view assigned tasks.';
+                            }
+                            
+                            $tasks = $record->tasks()->with('users')->get();
+                            
+                            if ($tasks->isEmpty()) {
+                                return 'No tasks assigned to this user.';
+                            }
+                            
+                            $html = '<div class="overflow-x-auto"><table class="min-w-full divide-y divide-gray-200">';
+                            $html .= '<thead class="bg-gray-50"><tr>';
+                            $html .= '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>';
+                            $html .= '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>';
+                            $html .= '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>';
+                            $html .= '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>';
+                            $html .= '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>';
+                            $html .= '</tr></thead>';
+                            $html .= '<tbody class="bg-white divide-y divide-gray-200">';
+                            
+                            foreach ($tasks as $task) {
+                                $html .= '<tr>';
+                                $html .= '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">' . e($task->title) . '</td>';
+                                $html .= '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">' . e($task->description) . '</td>';
+                                $html .= '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">' . e($task->due_date) . '</td>';
+                                $html .= '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">' . strtoupper(e($task->priority)) . '</td>';
+                                $html .= '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">' . ucfirst(e($task->status)) . '</td>';
+                                $html .= '</tr>';
+                            }
+                            
+                            $html .= '</tbody></table></div>';
+                            
+                            return new \Illuminate\Support\HtmlString($html);
+                        })
+                        ->columnSpanFull(),
+                ])
+                ->collapsible()
+                ->collapsed(),
             ]);
     }
 
