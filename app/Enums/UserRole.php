@@ -14,9 +14,4 @@ enum UserRole: string
             self::USER => 'Regular User',
         };
     }
-
-    public function isAdmin(): bool
-    {
-        return $this->label() === self::ADMIN;
-    }
 }
