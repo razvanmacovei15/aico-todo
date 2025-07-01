@@ -11,5 +11,11 @@ class Task extends Model
         'description',
         'due_date',
         'status',
+        'priority',
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }
