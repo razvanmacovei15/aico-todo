@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TaskResource\Pages;
-use App\Filament\Resources\TaskResource\RelationManagers;
 use App\Models\Task;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -29,7 +28,18 @@ class TaskResource extends Resource
                 ->required(),
                 Forms\Components\DatePicker::make('due_date')
                 ->required(),
-                Forms\Components\Toggle::make('completed')
+                Forms\Components\Select::make('priority')
+                    ->options([
+                        'low' => 'LOW',
+                        'medium' => 'MEDIUM',
+                        'high' => 'HIGH',
+                    ]),
+                Forms\Components\Select::make('status')
+                ->options([
+                    'pending' => 'Pending',
+                    'completed' => 'Completed',
+                    'cancelled' => 'Cancelled',
+                ])
             ]);
     }
 
@@ -39,8 +49,20 @@ class TaskResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\TextColumn::make('description'),
+                Tables\Columns\TextColumn::make('created_at'),
                 Tables\Columns\TextColumn::make('due_date'),
-                Tables\Columns\ToggleColumn::make('completed'),
+                Tables\Columns\SelectColumn::make('priority')
+                    ->options([
+                        'low' => 'LOW',
+                        'medium' => 'MEDIUM',
+                        'high' => 'HIGH',
+                    ]),
+                Tables\Columns\SelectColumn::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'completed' => 'Completed',
+                        'cancelled' => 'Cancelled',
+                    ]),
             ])
             ->filters([
                 //
